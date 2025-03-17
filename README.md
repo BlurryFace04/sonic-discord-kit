@@ -1,6 +1,7 @@
 <div align="center">
 
 # Sonic Discord Kit
+![COVER](https://github.com/user-attachments/assets/fd532021-f223-4bdd-8b87-f58c172fdbc5)
 
 </div>
 
