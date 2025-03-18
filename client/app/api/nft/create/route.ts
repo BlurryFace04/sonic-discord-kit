@@ -1,3 +1,5 @@
+export const maxDuration = 300
+
 import { NextResponse } from "next/server"
 import { PrivyClient } from "@privy-io/server-auth"
 import { VersionedTransaction } from "@solana/web3.js"

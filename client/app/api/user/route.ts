@@ -1,3 +1,5 @@
+export const maxDuration = 300
+
 // app/api/user/route.ts
 import { NextResponse } from 'next/server';
 

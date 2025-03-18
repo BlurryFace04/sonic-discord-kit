@@ -1,3 +1,5 @@
+export const maxDuration = 300
+
 import { NextResponse } from "next/server"
 import { Connection, PublicKey } from "@solana/web3.js"
 import {
