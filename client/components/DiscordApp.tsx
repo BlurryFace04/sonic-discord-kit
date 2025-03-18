@@ -85,6 +85,9 @@ export default function DiscordApp() {
   console.log("DiscordApp component mounted")
   const discordSdk = new DiscordSDK(process.env.NEXT_PUBLIC_DISCORD_APP_ID || "")
 
+  const [walletLoading, setWalletLoading] = useState(true)
+  const [walletError, setWalletError] = useState<string | null>(null)
+
   // SOL transfer states
   const [auth, setAuth] = useState(null)
   const [user, setUser] = useState<any>(null)
@@ -119,50 +122,50 @@ export default function DiscordApp() {
 
   useEffect(() => {
     async function setupDiscord() {
-      await discordSdk.ready()
-      console.log("Discord SDK is ready")
-      
-      console.log("🔄 Requesting Discord authorization...")
-      const { code } = await discordSdk.commands.authorize({
-        client_id: process.env.NEXT_PUBLIC_DISCORD_APP_ID || "",
-        response_type: "code",
-        state: "",
-        prompt: "none",
-        scope: ["identify", "guilds", "applications.commands"],
-      })
-
-      if (!code) {
-        console.error("❌ Authorization failed: No code returned")
-        return
-      }
-      console.log("✅ Authorization successful, code received:", code)
-
-      console.log("🔄 Sending token request to backend...")
-      const response = await fetch("/.proxy/api/token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
-      })
-
-      const { access_token } = await response.json()
-      const authData = await discordSdk.commands.authenticate({ access_token })
-
-      if (!authData) {
-        throw new Error("Authenticate command failed")
-      }
-
-      setAuth(authData as any)
-
-      const userInfoResponse = await fetch("https://discord.com/api/v10/users/@me", {
-        headers: { Authorization: `Bearer ${access_token}`, "Content-Type": "application/json" },
-      })
-
-      const userInfo = await userInfoResponse.json()
-      console.log("Discord User Info:", userInfo)
-
-      const discordId = userInfo.id
-
+      setWalletLoading(true)
       try {
+        await discordSdk.ready()
+        console.log("Discord SDK is ready")
+
+        console.log("🔄 Requesting Discord authorization...")
+        const { code } = await discordSdk.commands.authorize({
+          client_id: process.env.NEXT_PUBLIC_DISCORD_APP_ID || "",
+          response_type: "code",
+          state: "",
+          prompt: "none",
+          scope: ["identify", "guilds", "applications.commands"],
+        })
+
+        if (!code) {
+          throw new Error("Authorization failed: No code returned")
+        }
+        console.log("✅ Authorization successful, code received:", code)
+
+        console.log("🔄 Sending token request to backend...")
+        const response = await fetch("/.proxy/api/token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code }),
+        })
+
+        const { access_token } = await response.json()
+        const authData = await discordSdk.commands.authenticate({ access_token })
+
+        if (!authData) {
+          throw new Error("Authenticate command failed")
+        }
+
+        setAuth(authData as any)
+
+        const userInfoResponse = await fetch("https://discord.com/api/v10/users/@me", {
+          headers: { Authorization: `Bearer ${access_token}`, "Content-Type": "application/json" },
+        })
+
+        const userInfo = await userInfoResponse.json()
+        console.log("Discord User Info:", userInfo)
+
+        const discordId = userInfo.id
+
         const userResponse = await fetch(`/.proxy/api/user?discordId=${discordId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" }
@@ -174,22 +177,26 @@ export default function DiscordApp() {
           console.log("User found in ephemeral storage:", data)
           setUser(data.user)
 
-          const solanaAccount = (data.user.linkedAccounts as any[]).find(account => (account as any).chainType === 'solana')
-          const address = solanaAccount ? (solanaAccount as any).address : null
-          const id = solanaAccount ? (solanaAccount as any).id : null
+          // Find the wallet address from the linked accounts (e.g., for Solana)
+          const solanaAccount = (data.user.linkedAccounts as any[]).find(
+            (account) => account.chainType === 'solana'
+          )
+          const address = solanaAccount ? solanaAccount.address : null
+          const id = solanaAccount ? solanaAccount.id : null
 
           console.log("Wallet address:", address)
           console.log("Wallet ID:", id)
 
           setWalletAddress(address)
           setWalletId(id)
-
         } else {
-          console.log("No user found in ephemeral storage")
+          throw new Error("No user found in ephemeral storage")
         }
-
-      } catch (error) {
-        console.error("Error fetching user session:", error)
+      } catch (err: any) {
+        console.error("Error fetching wallet address:", err)
+        setWalletError(err.message)
+      } finally {
+        setWalletLoading(false)
       }
     }
 
@@ -356,6 +363,23 @@ export default function DiscordApp() {
     } finally {
       setNftMintLoading(false)
     }
+  }
+
+  // Conditional rendering based on wallet loading state and error
+  if (walletLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Label>Loading wallet address...</Label>
+      </div>
+    )
+  }
+
+  if (walletError || !walletAddress) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Label>Unable to get wallet address.</Label>
+      </div>
+    )
   }
 
   return (
