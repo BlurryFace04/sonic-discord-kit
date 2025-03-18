@@ -22,7 +22,11 @@ const client = new PrivyClient(
 
 export async function POST(request: Request) {
   try {
-    const { payer, to } = await request.json()
+    const { payer, to, walletId } = await request.json()
+
+    if (!payer || !to || !walletId) {
+      return NextResponse.json({ success: false, error: 'Missing required parameters: payer, to, and walletId.' }, { status: 400 })
+    }
 
     const umi = createUmi('https://sonic.helius-rpc.com')
     umi.use(mplCore())
@@ -36,8 +40,8 @@ export async function POST(request: Request) {
     
         const { signedTransaction } =
           await client.walletApi.solana.signTransaction({
-            walletId: "hh9ro3laqcyf47wxfrtxwj5c", // replace with your Privy wallet ID
-            transaction: versionedTx,
+            walletId: walletId,
+            transaction: versionedTx
           })
     
         const finalTx = fromWeb3JsTransaction(signedTransaction as VersionedTransaction)
@@ -55,7 +59,7 @@ export async function POST(request: Request) {
     
       signMessage: async (message: Uint8Array): Promise<Uint8Array> => {
         throw new Error("signMessage is not implemented for privySigner")
-      },
+      }
     }
 
     umi.use(signerIdentity(privySigner))
@@ -90,7 +94,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Asset fetch failed' }, { status: 500 })
     }
 
-    asset.header.lamports.basisPoints = asset.header.lamports.basisPoints.toString();
+    asset.header.lamports.basisPoints = asset.header.lamports.basisPoints.toString()
 
     return NextResponse.json({ success: true, asset, txHash }, { status: 200 })
 

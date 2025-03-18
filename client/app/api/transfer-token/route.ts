@@ -49,9 +49,9 @@ async function getMintInfo(connection: Connection, mintAddress: PublicKey) {
 // Token Transfer Endpoint
 export async function POST(request: Request) {
   try {
-    const { from, to, mintAddress, amount } = await request.json();
+    const { from, to, mintAddress, walletId, amount } = await request.json();
 
-    if (!from || !to || !mintAddress || amount === undefined) {
+    if (!from || !to || !mintAddress || !walletId || amount === undefined) {
       return NextResponse.json(
         { error: "Missing required parameters: from, to, mintAddress, and amount." },
         { status: 400 }
@@ -104,7 +104,7 @@ export async function POST(request: Request) {
 
     // Sign transaction using Privy
     const { signedTransaction } = await client.walletApi.solana.signTransaction({
-      walletId: "hh9ro3laqcyf47wxfrtxwj5c",
+      walletId: walletId,
       transaction: tx,
     });
 

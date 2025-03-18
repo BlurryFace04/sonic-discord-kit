@@ -23,12 +23,12 @@ const client = new PrivyClient(
 
 export async function POST(request: Request) {
   try {
-    const { from, to, lamports } = await request.json();
+    const { from, to, walletId, lamports } = await request.json();
 
     // Validate required parameters
-    if (!from || !to || lamports === undefined) {
+    if (!from || !to || !walletId || lamports === undefined) {
       return NextResponse.json(
-        { error: "Missing required parameters: from, to, and lamports." },
+        { error: "Missing required parameters: from, to, walletId, and lamports." },
         { status: 400 }
       );
     }
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     // console.log(tx);
 
     const { signedTransaction } = await client.walletApi.solana.signTransaction({
-      walletId: "hh9ro3laqcyf47wxfrtxwj5c",
+      walletId: walletId,
       transaction: tx,
     });
 

@@ -89,6 +89,7 @@ export default function DiscordApp() {
   const [auth, setAuth] = useState(null)
   const [user, setUser] = useState<any>(null)
   const [walletAddress, setWalletAddress] = useState<string | null>(null)
+  const [walletId, setWalletId] = useState<string | null>(null)
   const [balance, setBalance] = useState<number | null>(null)
   const [toAddress, setToAddress] = useState("")
   const [amount, setAmount] = useState("")
@@ -175,9 +176,14 @@ export default function DiscordApp() {
 
           const solanaAccount = (data.user.linkedAccounts as any[]).find(account => (account as any).chainType === 'solana')
           const address = solanaAccount ? (solanaAccount as any).address : null
+          const id = solanaAccount ? (solanaAccount as any).id : null
+
           console.log("Wallet address:", address)
+          console.log("Wallet ID:", id)
 
           setWalletAddress(address)
+          setWalletId(id)
+
         } else {
           console.log("No user found in ephemeral storage")
         }
@@ -252,8 +258,9 @@ export default function DiscordApp() {
         body: JSON.stringify({
           from: walletAddress,
           to: toAddress,
-          lamports: parseInt(amount),
-        }),
+          walletId: walletId,
+          lamports: parseInt(amount)
+        })
       })
 
       const data = await response.json()
@@ -293,8 +300,9 @@ export default function DiscordApp() {
           from: walletAddress,
           to: tokenToAddress,
           mintAddress: mintAddress,
-          amount: parseInt(tokenAmount),
-        }),
+          walletId: walletId,
+          amount: parseInt(tokenAmount)
+        })
       })
 
       const data = await response.json()
@@ -333,7 +341,8 @@ export default function DiscordApp() {
         body: JSON.stringify({
           payer: walletAddress,
           to: nftToAddress,
-        }),
+          walletId: walletId
+        })
       })
       const data = await response.json()
       if (data.success) {
