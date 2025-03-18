@@ -18,7 +18,7 @@ app.use(express.json());
 
 // Configure CORS to allow requests from client
 app.use(cors({
-  origin: 'https://sonic-discord-kit-client-435887166123.asia-south1.run.app',
+  origin: 'https://sonic.discordkit.xyz',
 }));
 
 // Get port, or default to 3000
@@ -105,7 +105,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         });
       }
 
-      const loginUrl = `https://sonic-discord-kit-client-435887166123.asia-south1.run.app/privy/?userId=${userId}`;
+      const loginUrl = `https://sonic.discordkit.xyz/privy/?userId=${userId}`;
 
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
