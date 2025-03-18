@@ -20,11 +20,11 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/.proxy/api/:path*",  // Ensure `.proxy` requests are redirected
-        destination: "http://localhost:3001/api/:path*", 
+        destination: "https://sonic-discord-kit-server-435887166123.asia-south1.run.app/api/:path*", 
       },
       {
         source: "/api/:path*",
-        destination: "http://localhost:3001/api/:path*", // Proxy API requests
+        destination: "https://sonic-discord-kit-server-435887166123.asia-south1.run.app/api/:path*", // Proxy API requests
       },
     ];
   },
@@ -35,7 +35,7 @@ const nextConfig: NextConfig = {
         headers: [...corsHeaders],
       },
     ];
-  },
+  }
 };
 
 export default nextConfig;

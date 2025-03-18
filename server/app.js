@@ -16,13 +16,13 @@ const app = express();
 
 app.use(express.json());
 
-// Configure CORS to allow requests from localhost:3000
+// Configure CORS to allow requests from client
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://sonic-discord-kit-client-435887166123.asia-south1.run.app',
 }));
 
-// Get port, or default to 3001
-const PORT = process.env.PORT || 3001;
+// Get port, or default to 3000
+const PORT = process.env.PORT || 3000;
 
 app.post("/api/token", async (req, res) => {
   console.log("Token request received");
@@ -105,7 +105,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         });
       }
 
-      const loginUrl = `http://localhost:3000/privy/?userId=${userId}`;
+      const loginUrl = `https://sonic-discord-kit-client-435887166123.asia-south1.run.app/privy/?userId=${userId}`;
 
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,

@@ -1,8 +1,7 @@
 {
-  "name": "discord-getting-started",
+  "name": "server",
   "private": true,
   "version": "1.0.0",
-  "description": "Discord example app",
   "main": "app.js",
   "type": "module",
   "engines": {
@@ -13,8 +12,6 @@
     "register": "node commands.js",
     "dev": "nodemon app.js"
   },
-  "author": "Shay DeWael",
-  "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
     "discord-interactions": "^4.0.0",

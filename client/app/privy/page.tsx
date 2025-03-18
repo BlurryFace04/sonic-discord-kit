@@ -1,13 +1,21 @@
 'use client'
 
 import Head from "next/head"
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Portal from "@/components/graphics/portal"
 import { useLogin, useLogout } from "@privy-io/react-auth"
 import { usePrivy, useHeadlessDelegatedActions, useSolanaWallets } from "@privy-io/react-auth"
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <LoginComponent />
+    </Suspense>
+  )
+}
+
+function LoginComponent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const userId = searchParams.get('userId')
@@ -55,7 +63,7 @@ export default function LoginPage() {
       console.log("Is already delegated: ", isAlreadyDelegated)
 
       if (address) {
-        fetch(`http://localhost:3001/privy-callback?userId=${userId}&address=${address}`)
+        fetch(`https://sonic-discord-kit-server-435887166123.asia-south1.run.app/privy-callback?userId=${userId}&address=${address}`)
           .then(response => response.json())
           .then(data => console.log('Callback response:', data))
           .catch(error => console.error('Error in callback:', error))
@@ -111,4 +119,8 @@ export default function LoginPage() {
       </main>
     </>
   )
+}
+
+function Loading() {
+  return <p>Loading...</p>
 }
