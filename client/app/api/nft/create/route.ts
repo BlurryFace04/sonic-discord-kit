@@ -88,6 +88,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Asset fetch failed' }, { status: 500 })
     }
 
+    asset.header.lamports.basisPoints = asset.header.lamports.basisPoints.toString();
+
     return NextResponse.json({ success: true, asset, txHash }, { status: 200 })
 
   } catch (e: any) {
