@@ -377,7 +377,7 @@ export default function DiscordApp() {
   if (walletError || !walletAddress) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <Label>Unable to get wallet address.</Label>
+        <Label>First login using privy by using the command /privy to get your wallet address.</Label>
       </div>
     )
   }
