@@ -2,10 +2,8 @@ export const maxDuration = 300
 
 // app/api/user/route.ts
 import { NextResponse } from 'next/server';
-
-// An in-memory store for user sessions keyed by Discord user ID.
-// This is ephemeral storage.
-const userStore = new Map<string, any>();
+import { connectToDB } from '@/utils/database';
+import mongoose from 'mongoose';
 
 // GET /api/user?discordId=<discordId>
 // Retrieves the stored user data for the given Discord user ID.
@@ -17,7 +15,13 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Missing discordId parameter' }, { status: 400 });
   }
 
-  const user = userStore.get(discordId) || null;
+  await connectToDB();
+
+  if (!mongoose.connection.db) {
+    return NextResponse.json({ error: 'Database connection not established' }, { status: 500 });
+  }
+
+  const user = await mongoose.connection.db.collection('users').findOne({ discordId });
   return NextResponse.json({ user });
 }
 
@@ -31,8 +35,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing discordId or user in request body' }, { status: 400 });
     }
 
-    // Store the user data in memory
-    userStore.set(discordId, user);
+    await connectToDB();
+
+    if (!mongoose.connection.db) {
+      return NextResponse.json({ error: 'Database connection not established' }, { status: 500 });
+    }
+
+    await mongoose.connection.db.collection('users').updateOne(
+      { discordId },
+      { $set: { user } },
+      { upsert: true }
+    );
+
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
