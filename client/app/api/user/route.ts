@@ -22,7 +22,7 @@ export async function GET(request: Request) {
   }
 
   const user = await mongoose.connection.db.collection('users').findOne({ discordId });
-  return NextResponse.json({ user });
+  return NextResponse.json({ user: user?.user });
 }
 
 // POST /api/user
