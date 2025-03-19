@@ -37,20 +37,29 @@ function LoginComponent() {
 
   useEffect(() => {
     if (ready && authenticated && user && userId) {
-      const discordId = user.discord?.subject
+      // const discordId = user.discord?.subject
 
-      if (discordId) {
-        fetch("/api/user", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ discordId, user })
-        })
-          .then(res => res.json())
-          .then(data => console.log("User session stored:", data))
-          .catch(error => console.error("Error storing session:", error))
-      } else {
-        console.log("No discordId found")
-      }
+      // if (discordId) {
+      //   fetch("/api/user", {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify({ discordId, user })
+      //   })
+      //     .then(res => res.json())
+      //     .then(data => console.log("User session stored:", data))
+      //     .catch(error => console.error("Error storing session:", error))
+      // } else {
+      //   console.log("No discordId found")
+      // }
+
+    fetch("/api/user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ discordId: userId, user })
+    })
+      .then(res => res.json())
+      .then(data => console.log("User session stored:", data))
+      .catch(error => console.error("Error storing session:", error))
 
       const solanaAccount = (user.linkedAccounts as any[]).find(
         account => (account as any).chainType === 'solana'

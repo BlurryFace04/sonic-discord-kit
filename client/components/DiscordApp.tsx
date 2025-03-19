@@ -16,69 +16,7 @@ import { Label } from "@/components/ui/label"
 
 // just for reference, this is how privy's user object looks like
 const USER = {
-  "id": "did:privy:cm83m1783016e11yav3lwalea",
-  "createdAt": "2025-03-10T22:04:34.000Z",
-  "linkedAccounts": [
-    {
-      "subject": "611143412720074752",
-      "username": "blurryface04#0",
-      "email": "arnav29104@gmail.com",
-      "type": "discord_oauth",
-      "verifiedAt": "2025-03-10T22:04:34.000Z",
-      "firstVerifiedAt": "2025-03-10T22:04:34.000Z",
-      "latestVerifiedAt": "2025-03-16T12:52:13.000Z"
-    },
-    {
-      "id": null,
-      "address": "0xcbfFe3A281998dbaD51E2EeE52F6992DD881ff45",
-      "type": "wallet",
-      "imported": false,
-      "delegated": false,
-      "verifiedAt": "2025-03-10T22:04:38.000Z",
-      "firstVerifiedAt": "2025-03-10T22:04:38.000Z",
-      "latestVerifiedAt": "2025-03-10T22:04:38.000Z",
-      "chainType": "ethereum",
-      "walletClientType": "privy",
-      "connectorType": "embedded",
-      "recoveryMethod": "privy",
-      "walletIndex": 0
-    },
-    {
-      "id": "hh9ro3laqcyf47wxfrtxwj5c",
-      "address": "CbqJ3U5XSDr2jGem8EtsKU2cPGMHimRnSRevWhKeo2CM",
-      "type": "wallet",
-      "imported": false,
-      "delegated": true,
-      "verifiedAt": "2025-03-10T22:14:52.000Z",
-      "firstVerifiedAt": "2025-03-10T22:04:38.000Z",
-      "latestVerifiedAt": "2025-03-10T22:04:38.000Z",
-      "chainType": "solana",
-      "walletClientType": "privy",
-      "connectorType": "embedded",
-      "recoveryMethod": "privy",
-      "walletIndex": 0
-    }
-  ],
-  "wallet": {
-    "id": null,
-    "address": "0xcbfFe3A281998dbaD51E2EeE52F6992DD881ff45",
-    "chainType": "ethereum",
-    "walletClientType": "privy",
-    "connectorType": "embedded",
-    "recoveryMethod": "privy",
-    "imported": false,
-    "delegated": false,
-    "walletIndex": 0
-  },
-  "discord": {
-    "subject": "611143412720074752",
-    "username": "blurryface04#0",
-    "email": "arnav29104@gmail.com"
-  },
-  "delegatedWallets": [],
-  "mfaMethods": [],
-  "hasAcceptedTerms": false,
-  "isGuest": false
+  // ... user object ...
 }
 
 export default function DiscordApp() {
@@ -383,9 +321,9 @@ export default function DiscordApp() {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-y-8 px-40 py-20 justify-center">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 px-4 md:px-40 py-4 md:py-20 justify-center">
       {/* SOL Transfer Card */}
-      <Card className="w-[500px]">
+      <Card className="w-full max-w-[500px]">
         <CardHeader>
           <CardTitle>Transfer SOL</CardTitle>
         </CardHeader>
@@ -449,7 +387,7 @@ export default function DiscordApp() {
       </Card>
 
       {/* Token Transfer Card */}
-      <Card className="w-[500px]">
+      <Card className="w-full max-w-[500px]">
         <CardHeader>
           <CardTitle>Transfer Token</CardTitle>
         </CardHeader>
@@ -520,7 +458,7 @@ export default function DiscordApp() {
       </Card>
 
       {/* Token Balances Card */}
-      <Card className="w-[500px]">
+      <Card className="w-full max-w-[500px]">
         <CardHeader>
           <CardTitle>Token Balances</CardTitle>
         </CardHeader>
@@ -598,7 +536,7 @@ export default function DiscordApp() {
       </Card>
 
       {/* NFT Mint Card */}
-      <Card className="w-[500px]">
+      <Card className="w-full max-w-[500px]">
         <CardHeader>
           <CardTitle>Mint Metaplex Core NFT</CardTitle>
         </CardHeader>

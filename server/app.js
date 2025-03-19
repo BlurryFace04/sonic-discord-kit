@@ -105,7 +105,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         });
       }
 
-      const loginUrl = `https://sonic.discordkit.xyz/privy/?userId=${userId}`;
+      const loginUrl = `Login with privy to create a sonic account: \nhttps://sonic.discordkit.xyz/privy/?userId=${userId} \nNote: If you are on windows, refrain from authenticating to privy via discord, instead use email or google.`;
 
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
