@@ -14,11 +14,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-// just for reference, this is how privy's user object looks like
-const USER = {
-  // ... user object ...
-}
-
 export default function DiscordApp() {
   console.log("DiscordApp component mounted")
   const discordSdk = new DiscordSDK(process.env.NEXT_PUBLIC_DISCORD_APP_ID || "")
