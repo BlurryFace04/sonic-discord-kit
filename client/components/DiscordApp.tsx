@@ -397,9 +397,8 @@ export default function DiscordApp() {
           <form onSubmit={handleTransfer}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                {/* <Label>Your privy account</Label> */}
-                {/* <Label>{walletAddress}</Label> */}
-                <pre style={{ fontSize: '14px' }}>Your privy account: {walletAddress}</pre>
+                <Label>Your privy account</Label>
+                <pre style={{ fontSize: '14px' }}>{walletAddress}</pre>
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label>Balance: {balance} lamports</Label>
@@ -462,9 +461,8 @@ export default function DiscordApp() {
           <form onSubmit={handleTokenTransfer}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                {/* <Label>Your privy account</Label>
-                <Label>{walletAddress}</Label> */}
-                <pre style={{ fontSize: '14px' }}>Your privy account: {walletAddress}</pre>
+                <Label>Your privy account</Label>
+                <pre style={{ fontSize: '14px' }}>{walletAddress}</pre>
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="token-to">To wallet address</Label>
@@ -544,7 +542,10 @@ export default function DiscordApp() {
                     <div key={idx} className="mt-2 border p-2 rounded space-y-1">
                       <Label>Name: {token.name}</Label>
                       <Label>Symbol: {token.symbol}</Label>
-                      <Label>Mint: {token.mint}</Label>
+                      <div className="flex items-center space-x-2">
+                        <Label>Mint:</Label>
+                        <pre style={{ fontSize: '14px' }}>{token.mint}</pre>
+                      </div>
                       <Label>Balance (smallest unit): {token.balance}</Label>
                       <Label>Decimals: {token.decimals}</Label>
                     </div>
@@ -560,7 +561,10 @@ export default function DiscordApp() {
                     <div key={idx} className="mt-2 border p-2 rounded space-y-1">
                       <Label>Name: {token.name}</Label>
                       <Label>Symbol: {token.symbol}</Label>
-                      <Label>Mint: {token.mint}</Label>
+                      <div className="flex items-center space-x-2">
+                        <Label>Mint:</Label>
+                        <pre style={{ fontSize: '14px' }}>{token.mint}</pre>
+                      </div>                      
                       <Label>Balance (smallest unit): {token.balance}</Label>
                       <Label>Decimals: {token.decimals}</Label>
                     </div>
@@ -612,9 +616,8 @@ export default function DiscordApp() {
           <form onSubmit={handleNftMint}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                {/* <Label>Your privy account</Label>
-                <Label>{walletAddress}</Label> */}
-                <pre style={{ fontSize: '14px' }}>Your privy account: {walletAddress}</pre>
+                <Label>Your privy account</Label>
+                <pre style={{ fontSize: '14px' }}>{walletAddress}</pre>
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="nft-to">Mint NFT to wallet address</Label>
@@ -669,9 +672,8 @@ export default function DiscordApp() {
           <form onSubmit={handleDeployCollection}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                {/* <Label>Your privy account</Label>
-                <Label>{walletAddress}</Label> */}
-                <pre style={{ fontSize: '14px' }}>Your privy account: {walletAddress}</pre>
+                <Label>Your privy account</Label>
+                <pre style={{ fontSize: '14px' }}>{walletAddress}</pre>
               </div>
               <Button type="submit" className="w-full" disabled={collectionDeployLoading}>
                 {collectionDeployLoading ? "Deploying Collection..." : "Deploy Collection"}
@@ -716,9 +718,8 @@ export default function DiscordApp() {
           <form onSubmit={handleMintNftToCollection}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                {/* <Label>Your privy account</Label>
-                <Label>{walletAddress}</Label> */}
-                <pre style={{ fontSize: '14px' }}>Your privy account: {walletAddress}</pre>
+                <Label>Your privy account</Label>
+                <pre style={{ fontSize: '14px' }}>{walletAddress}</pre>
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="collection-mint-to">Mint NFT to wallet address</Label>
