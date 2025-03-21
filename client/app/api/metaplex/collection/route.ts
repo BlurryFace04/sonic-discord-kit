@@ -65,7 +65,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Collection fetch failed' }, { status: 500 })
     }
 
-    // collection.header.lamports.basisPoints = collection.header.lamports.basisPoints.toString()
+    collection.header.lamports.basisPoints = collection.header.lamports.basisPoints.toString()
 
     return NextResponse.json({ success: true, collection, txHash }, { status: 200 })
 
