@@ -53,6 +53,20 @@ export default function DiscordApp() {
   const [nftMintError, setNftMintError] = useState<string | null>(null)
   const [mintedAsset, setMintedAsset] = useState<any>(null)
 
+  // Deploy Collection states
+  const [collectionDeployLoading, setCollectionDeployLoading] = useState(false)
+  const [collectionDeployTxHash, setCollectionDeployTxHash] = useState<string | null>(null)
+  const [collectionDeployError, setCollectionDeployError] = useState<string | null>(null)
+  const [deployedCollection, setDeployedCollection] = useState<any>(null)
+
+  // Mint NFT to Collection states
+  const [collectionMintToAddress, setCollectionMintToAddress] = useState("")
+  const [collectionMintCollectionMint, setCollectionMintCollectionMint] = useState("")
+  const [collectionMintLoading, setCollectionMintLoading] = useState(false)
+  const [collectionMintTxHash, setCollectionMintTxHash] = useState<string | null>(null)
+  const [collectionMintError, setCollectionMintError] = useState<string | null>(null)
+  const [mintedCollectionAsset, setMintedCollectionAsset] = useState<any>(null)
+
   useEffect(() => {
     async function setupDiscord() {
       setWalletLoading(true)
@@ -275,7 +289,7 @@ export default function DiscordApp() {
     setNftMintTxHash(null)
     setNftMintLoading(true)
     try {
-      const response = await fetch("/.proxy/api/nft/create", {
+      const response = await fetch("/.proxy/api/metaplex/standalone-nft", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -298,6 +312,63 @@ export default function DiscordApp() {
     }
   }
 
+  // Handle Deploy Collection
+  async function handleDeployCollection(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setCollectionDeployError(null)
+    setCollectionDeployTxHash(null)
+    setCollectionDeployLoading(true)
+    try {
+      const response = await fetch("/.proxy/api/metaplex/collection", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ payer: walletAddress, walletId })
+      })
+      const data = await response.json()
+      if (data.success) {
+        setCollectionDeployTxHash(data.txHash)
+        setDeployedCollection(data.collection)
+      } else {
+        setCollectionDeployError(data.error || "Collection deployment failed")
+      }
+    } catch (err: any) {
+      setCollectionDeployError(err.message)
+    } finally {
+      setCollectionDeployLoading(false)
+    }
+  }
+
+  // Handle Mint NFT to Collection
+  async function handleMintNftToCollection(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setCollectionMintError(null)
+    setCollectionMintTxHash(null)
+    setCollectionMintLoading(true)
+    try {
+      const response = await fetch("/.proxy/api/metaplex/nft", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          payer: walletAddress,
+          to: collectionMintToAddress,
+          collectionMint: collectionMintCollectionMint,
+          walletId: walletId
+        })
+      })
+      const data = await response.json()
+      if (data.success) {
+        setCollectionMintTxHash(data.txHash)
+        setMintedCollectionAsset(data.asset)
+      } else {
+        setCollectionMintError(data.error || "Minting NFT to collection failed")
+      }
+    } catch (err: any) {
+      setCollectionMintError(err.message)
+    } finally {
+      setCollectionMintLoading(false)
+    }
+  }
+
   // Conditional rendering based on wallet loading state and error
   if (walletLoading) {
     return (
@@ -310,7 +381,7 @@ export default function DiscordApp() {
   if (walletError || !walletAddress) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <Label>First login using privy by using the command /privy to get your wallet address.</Label>
+        <Label>First login using privy by using the command /privy to create your sonic account.</Label>
       </div>
     )
   }
@@ -533,7 +604,7 @@ export default function DiscordApp() {
       {/* NFT Mint Card */}
       <Card className="w-full max-w-[500px]">
         <CardHeader>
-          <CardTitle>Mint Metaplex Core NFT</CardTitle>
+          <CardTitle>Mint Standalone Metaplex Core NFT</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleNftMint}>
@@ -580,6 +651,118 @@ export default function DiscordApp() {
           {nftMintError && (
             <div className="mt-4">
               <Label className="text-red-600">Error: {nftMintError}</Label>
+            </div>
+          )}
+        </CardContent>
+        <CardFooter />
+      </Card>
+
+      {/* Deploy Collection Card */}
+      <Card className="w-full max-w-[500px]">
+        <CardHeader>
+          <CardTitle>Deploy Collection</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleDeployCollection}>
+            <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label>Your privy account</Label>
+                <Label>{walletAddress}</Label>
+              </div>
+              <Button type="submit" className="w-full" disabled={collectionDeployLoading}>
+                {collectionDeployLoading ? "Deploying Collection..." : "Deploy Collection"}
+              </Button>
+            </div>
+          </form>
+          {collectionDeployTxHash && (
+            <div className="mt-4">
+              <Label className="text-green-600 mb-2">Collection Deployed Successfully!</Label>
+              <Label>
+                <a
+                  href={`https://explorer.sonic.game/tx/${collectionDeployTxHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline"
+                >
+                  View Transaction
+                </a>
+              </Label>
+              {deployedCollection && (
+                <div className="mt-2 border p-2 rounded overflow-auto" style={{ maxWidth: '100%', whiteSpace: 'pre-wrap' }}>
+                  <pre style={{ fontSize: '12px', overflowX: 'auto' }}>{JSON.stringify(deployedCollection, null, 2)}</pre>
+                </div>
+              )}
+            </div>
+          )}
+          {collectionDeployError && (
+            <div className="mt-4">
+              <Label className="text-red-600">Error: {collectionDeployError}</Label>
+            </div>
+          )}
+        </CardContent>
+        <CardFooter />
+      </Card>
+
+      {/* Mint NFT to Collection Card */}
+      <Card className="w-full max-w-[500px]">
+        <CardHeader>
+          <CardTitle>Mint NFT to Collection</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleMintNftToCollection}>
+            <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label>Your privy account</Label>
+                <Label>{walletAddress}</Label>
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="collection-mint-to">Mint NFT to wallet address</Label>
+                <Input
+                  id="collection-mint-to"
+                  placeholder="destination address"
+                  autoComplete="off"
+                  value={collectionMintToAddress}
+                  onChange={(e) => setCollectionMintToAddress(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="collection-mint-collection">Collection Mint Address</Label>
+                <Input
+                  id="collection-mint-collection"
+                  placeholder="collection mint address"
+                  autoComplete="off"
+                  value={collectionMintCollectionMint}
+                  onChange={(e) => setCollectionMintCollectionMint(e.target.value)}
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={collectionMintLoading}>
+                {collectionMintLoading ? "Minting NFT..." : "Mint NFT to Collection"}
+              </Button>
+            </div>
+          </form>
+          {collectionMintTxHash && (
+            <div className="mt-4">
+              <Label className="text-green-600 mb-2">NFT Minted Successfully!</Label>
+              <Label>
+                <a
+                  href={`https://explorer.sonic.game/tx/${collectionMintTxHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline"
+                >
+                  View Transaction
+                </a>
+              </Label>
+              {mintedCollectionAsset && (
+                <div className="mt-2 border p-2 rounded overflow-auto" style={{ maxWidth: '100%', whiteSpace: 'pre-wrap' }}>
+                  <pre style={{ fontSize: '12px', overflowX: 'auto' }}>{JSON.stringify(mintedCollectionAsset, null, 2)}</pre>
+                </div>
+              )}
+            </div>
+          )}
+          {collectionMintError && (
+            <div className="mt-4">
+              <Label className="text-red-600">Error: {collectionMintError}</Label>
             </div>
           )}
         </CardContent>
