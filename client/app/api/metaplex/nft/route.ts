@@ -8,6 +8,7 @@ import { publicKey } from '@metaplex-foundation/umi'
 import { fromWeb3JsPublicKey } from "@metaplex-foundation/umi-web3js-adapters"
 import { getPrivySigner } from "@/components/PrivySigner"
 import bs58 from "bs58"
+import { PublicKey } from "@solana/web3.js"
 
 export async function POST(request: Request) {
   try {
@@ -26,7 +27,7 @@ export async function POST(request: Request) {
 
     const assetSigner = generateSigner(umi)
 
-    const umiCollectionMint = fromWeb3JsPublicKey(collectionMint)
+    const umiCollectionMint = fromWeb3JsPublicKey(new PublicKey(collectionMint))
 
     const collection = await fetchCollection(umi, umiCollectionMint)
 
