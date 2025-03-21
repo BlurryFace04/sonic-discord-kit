@@ -66,6 +66,8 @@ export async function POST(request: Request) {
     }
 
     collection.header.lamports.basisPoints = collection.header.lamports.basisPoints.toString()
+    collection.pluginHeader.pluginRegistryOffset = collection.pluginHeader.pluginRegistryOffset.toString()
+    collection.royalties.offset = collection.royalties.offset.toString()
 
     return NextResponse.json({ success: true, collection, txHash }, { status: 200 })
 
