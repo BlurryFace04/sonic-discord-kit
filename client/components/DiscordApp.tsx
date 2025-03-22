@@ -524,13 +524,13 @@ export default function DiscordApp() {
           >
             {tokenBalancesLoading ? "Fetching..." : "Fetch Token Balances"}
           </Button>
-          {tokenBalancesLoading ? (
-            <Label>Loading token balances...</Label>
-          ) : tokenBalancesError ? (
-            <Label className="text-red-600">Error: {tokenBalancesError}</Label>
+          {tokenBalancesError ? (
+            <div className="mt-4">
+              <Label className="text-red-600">Error: {tokenBalancesError}</Label>
+            </div>
           ) : tokenBalances ? (
             <>
-              <div>
+              <div className="mt-4">
                 <Label className="font-bold">SPL Tokens</Label>
                 {tokenBalances.splTokens.length > 0 ? (
                   tokenBalances.splTokens.map((token, idx) => (
@@ -774,7 +774,7 @@ export default function DiscordApp() {
             <div className="mt-4">
               {nfts.length > 0 ? (
                 nfts.map((nft, idx) => (
-                  <div key={idx} className="mt-2 border p-2 rounded space-y-1 overflow-x-auto">
+                  <div key={idx} className="mt-2 border p-2 rounded space-y-1.5 overflow-x-auto">
                     <div className="min-w-max">
                       <Label>Mint: {nft.publicKey}</Label>
                       <Label>Name: {nft.name}</Label>
