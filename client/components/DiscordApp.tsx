@@ -774,8 +774,8 @@ export default function DiscordApp() {
             <div className="mt-4">
               {nfts.length > 0 ? (
                 nfts.map((nft, idx) => (
-                  <div key={idx} className="mt-2 border p-2 rounded space-y-2 overflow-x-auto">
-                    <div className="min-w-max">
+                  <div key={idx} className="mt-2 border p-2 rounded overflow-x-auto">
+                    <div className="min-w-max space-y-1">
                       <div className="flex items-center space-x-2">
                         <Label>Mint:</Label>
                         <pre style={{ fontSize: '14px' }}>{nft.publicKey}</pre>
