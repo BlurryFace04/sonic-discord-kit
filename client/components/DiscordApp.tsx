@@ -366,7 +366,7 @@ export default function DiscordApp() {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label>Your privy account</Label>
-                <pre className="text-sm font-ny">{walletAddress}</pre>
+                <Label>{walletAddress}</Label>
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label>Balance: {balance} lamports</Label>
@@ -430,7 +430,7 @@ export default function DiscordApp() {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label>Your privy account</Label>
-                <pre className="text-sm font-ny">{walletAddress}</pre>
+                <Label>{walletAddress}</Label>
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="token-to">To wallet address</Label>
@@ -537,10 +537,7 @@ export default function DiscordApp() {
                     <div key={idx} className="mt-2 border p-2 rounded space-y-1">
                       <Label>Name: {token.name}</Label>
                       <Label>Symbol: {token.symbol}</Label>
-                      <div className="flex items-center space-x-2">
-                        <Label>Mint:</Label>
-                        <pre className="text-sm font-ny">{token.mint}</pre>
-                      </div>
+                      <Label>Mint: {token.mint}</Label>
                       <Label>Balance (smallest unit): {token.balance}</Label>
                       <Label>Decimals: {token.decimals}</Label>
                     </div>
@@ -556,10 +553,7 @@ export default function DiscordApp() {
                     <div key={idx} className="mt-2 border p-2 rounded space-y-1">
                       <Label>Name: {token.name}</Label>
                       <Label>Symbol: {token.symbol}</Label>
-                      <div className="flex items-center space-x-2">
-                        <Label>Mint:</Label>
-                        <pre className="text-sm font-ny">{token.mint}</pre>
-                      </div>                      
+                      <Label>Mint: {token.mint}</Label>
                       <Label>Balance (smallest unit): {token.balance}</Label>
                       <Label>Decimals: {token.decimals}</Label>
                     </div>
@@ -777,14 +771,8 @@ export default function DiscordApp() {
                   <div key={idx} className="mt-2 border p-2 rounded overflow-x-auto">
                     <div className="min-w-max space-y-1">
                       <Label>Name: {nft.name}</Label>
-                      <div className="flex items-center space-x-2">
-                        <Label>Mint:</Label>
-                        <pre className="text-sm font-ny">{nft.publicKey}</pre>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Label>URI:</Label>
-                        <pre className="text-sm font-ny">{nft.uri}</pre>
-                      </div>
+                      <Label>Mint: {nft.publicKey}</Label>
+                      <Label>URI: {nft.uri}</Label>
                     </div>
                   </div>
                 ))
