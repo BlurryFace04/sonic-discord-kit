@@ -44,11 +44,10 @@ export async function POST(request: Request) {
       skipDerivePlugins: false
     })
 
-    // console.log(JSON.stringify(assetsByOwner, null, 2))
 
     const safeAssets = convertBigInts(assetsByOwner)
 
-    return NextResponse.json({ success: true, assets: safeAssets }, { status: 200 })
+    return NextResponse.json({ success: true, assets: safeAssets.assets }, { status: 200 })
     
   } catch (e: any) {
     console.error(e)

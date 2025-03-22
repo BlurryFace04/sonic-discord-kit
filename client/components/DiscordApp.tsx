@@ -66,6 +66,11 @@ export default function DiscordApp() {
   const [collectionMintError, setCollectionMintError] = useState<string | null>(null)
   const [mintedCollectionAsset, setMintedCollectionAsset] = useState<any>(null)
 
+  // New states for fetching NFTs
+  const [nfts, setNfts] = useState<any[] | null>(null)
+  const [nftsLoading, setNftsLoading] = useState(false)
+  const [nftsError, setNftsError] = useState<string | null>(null)
+
   useEffect(() => {
     async function setupDiscord() {
       setWalletLoading(true)
@@ -578,10 +583,6 @@ export default function DiscordApp() {
         <CardContent>
           <form onSubmit={handleNftMint}>
             <div className="grid w-full items-center gap-4">
-              {/* <div className="flex flex-col space-y-1.5">
-                <Label>Your privy account</Label>
-                <pre style={{ fontSize: '14px' }}>{walletAddress}</pre>
-              </div> */}
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="nft-to">Mint NFT to wallet address</Label>
                 <Input
@@ -634,10 +635,6 @@ export default function DiscordApp() {
         <CardContent>
           <form onSubmit={handleDeployCollection}>
             <div className="grid w-full items-center gap-4">
-              {/* <div className="flex flex-col space-y-1.5">
-                <Label>Your privy account</Label>
-                <pre style={{ fontSize: '14px' }}>{walletAddress}</pre>
-              </div> */}
               <Button type="submit" className="w-full" disabled={collectionDeployLoading}>
                 {collectionDeployLoading ? "Deploying Collection..." : "Deploy Collection"}
               </Button>
@@ -680,10 +677,6 @@ export default function DiscordApp() {
         <CardContent>
           <form onSubmit={handleMintNftToCollection}>
             <div className="grid w-full items-center gap-4">
-              {/* <div className="flex flex-col space-y-1.5">
-                <Label>Your privy account</Label>
-                <pre style={{ fontSize: '14px' }}>{walletAddress}</pre>
-              </div> */}
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="collection-mint-to">Mint NFT to wallet address</Label>
                 <Input
@@ -732,6 +725,65 @@ export default function DiscordApp() {
           {collectionMintError && (
             <div className="mt-4">
               <Label className="text-red-600">Error: {collectionMintError}</Label>
+            </div>
+          )}
+        </CardContent>
+        <CardFooter />
+      </Card>
+
+      {/* Fetch NFTs Card */}
+      <Card className="w-full max-w-[500px]">
+        <CardHeader>
+          <CardTitle>Fetch NFTs</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Button
+            onClick={async () => {
+              if (walletAddress && walletId) {
+                setNftsLoading(true)
+                setNftsError(null)
+                try {
+                  const response = await fetch("/.proxy/api/metaplex/fetchnfts", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ address: walletAddress, walletId }),
+                  })
+                  const data = await response.json()
+                  if (data.success) {
+                    setNfts(data.assets)
+                  } else {
+                    setNftsError(data.error || "Failed to fetch NFTs")
+                  }
+                } catch (err: any) {
+                  setNftsError(err.message)
+                } finally {
+                  setNftsLoading(false)
+                }
+              }
+            }}
+            disabled={nftsLoading}
+            className="w-full"
+          >
+            {nftsLoading ? "Fetching NFTs..." : "Fetch NFTs"}
+          </Button>
+          {nftsError && (
+            <div className="mt-4">
+              <Label className="text-red-600">Error: {nftsError}</Label>
+            </div>
+          )}
+          {nfts && (
+            <div className="mt-4">
+              {nfts.length > 0 ? (
+                nfts.map((nft, idx) => (
+                  <div key={idx} className="mt-2 border p-2 rounded space-y-1">
+                    <Label>Mint: {nft.publicKey}</Label>
+                    <Label>Name: {nft.name}</Label>
+                    <Label>URI: {nft.uri}</Label>
+                  </div>
+                ))
+              ) : (
+                <Label>No NFTs found.</Label>
+              )}
             </div>
           )}
         </CardContent>
