@@ -9,7 +9,6 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -41,8 +40,8 @@ export default function DiscordApp() {
   const [tokenTransferTxHash, setTokenTransferTxHash] = useState<string | null>(null)
   const [tokenTransferError, setTokenTransferError] = useState<string | null>(null)
 
-  // Token balances state
-  const [tokenBalances, setTokenBalances] = useState<{ splTokens: any[]; token2022Tokens: any[] }>({ splTokens: [], token2022Tokens: [] })
+  // Token balances state - now null initially to indicate no fetch performed yet
+  const [tokenBalances, setTokenBalances] = useState<{ splTokens: any[]; token2022Tokens: any[] } | null>(null)
   const [tokenBalancesLoading, setTokenBalancesLoading] = useState(false)
   const [tokenBalancesError, setTokenBalancesError] = useState<string | null>(null)
 
@@ -172,33 +171,6 @@ export default function DiscordApp() {
     fetchBalance()
   }, [walletAddress])
 
-  // Fetch token balances when walletAddress updates or after token transfer
-  useEffect(() => {
-    async function fetchTokenBalances() {
-      if (walletAddress) {
-        setTokenBalancesLoading(true)
-        setTokenBalancesError(null)
-        try {
-          const response = await fetch("/.proxy/api/token-balance", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ address: walletAddress }),
-          })
-          const data = await response.json()
-          if (data.splTokens !== undefined && data.token2022Tokens !== undefined) {
-            setTokenBalances({ splTokens: data.splTokens, token2022Tokens: data.token2022Tokens })
-          }
-        } catch (err: any) {
-          console.error("Error fetching token balances:", err)
-          setTokenBalancesError(err.message)
-        } finally {
-          setTokenBalancesLoading(false)
-        }
-      }
-    }
-    fetchTokenBalances()
-  }, [walletAddress, tokenTransferTxHash])
-
   // Handle SOL transfer
   async function handleTransfer(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -262,16 +234,7 @@ export default function DiscordApp() {
       const data = await response.json()
       if (data.success) {
         setTokenTransferTxHash(data.txHash)
-        // Refresh token balances after successful transfer
-        const balanceResponse = await fetch("/.proxy/api/token-balance", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ address: walletAddress }),
-        })
-        const balanceData = await balanceResponse.json()
-        if (balanceData.splTokens !== undefined && balanceData.token2022Tokens !== undefined) {
-          setTokenBalances({ splTokens: balanceData.splTokens, token2022Tokens: balanceData.token2022Tokens })
-        }
+        // Removed automatic token balances refresh here
       } else {
         setTokenTransferError(data.error || "Token transfer failed")
       }
@@ -533,7 +496,7 @@ export default function DiscordApp() {
             <Label>Loading token balances...</Label>
           ) : tokenBalancesError ? (
             <Label className="text-red-600">Error: {tokenBalancesError}</Label>
-          ) : (
+          ) : tokenBalances ? (
             <>
               <div>
                 <Label className="font-bold">SPL Tokens</Label>
@@ -574,7 +537,7 @@ export default function DiscordApp() {
                 )}
               </div>
             </>
-          )}
+          ) : null}
         </CardContent>
         <CardFooter>
           <Button
@@ -592,7 +555,7 @@ export default function DiscordApp() {
                     setTokenBalances({ splTokens: data.splTokens, token2022Tokens: data.token2022Tokens })
                   }
                 } catch (err: any) {
-                  console.error("Error refreshing token balances:", err)
+                  console.error("Error fetching token balances:", err)
                   setTokenBalancesError(err.message)
                 } finally {
                   setTokenBalancesLoading(false)
@@ -602,7 +565,7 @@ export default function DiscordApp() {
             disabled={tokenBalancesLoading}
             className="w-full"
           >
-            {tokenBalancesLoading ? "Refreshing..." : "Refresh Token Balances"}
+            {tokenBalancesLoading ? "Fetching..." : "Fetch Token Balances"}
           </Button>
         </CardFooter>
       </Card>
@@ -615,10 +578,10 @@ export default function DiscordApp() {
         <CardContent>
           <form onSubmit={handleNftMint}>
             <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
+              {/* <div className="flex flex-col space-y-1.5">
                 <Label>Your privy account</Label>
                 <pre style={{ fontSize: '14px' }}>{walletAddress}</pre>
-              </div>
+              </div> */}
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="nft-to">Mint NFT to wallet address</Label>
                 <Input
@@ -671,10 +634,10 @@ export default function DiscordApp() {
         <CardContent>
           <form onSubmit={handleDeployCollection}>
             <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
+              {/* <div className="flex flex-col space-y-1.5">
                 <Label>Your privy account</Label>
                 <pre style={{ fontSize: '14px' }}>{walletAddress}</pre>
-              </div>
+              </div> */}
               <Button type="submit" className="w-full" disabled={collectionDeployLoading}>
                 {collectionDeployLoading ? "Deploying Collection..." : "Deploy Collection"}
               </Button>
@@ -717,10 +680,10 @@ export default function DiscordApp() {
         <CardContent>
           <form onSubmit={handleMintNftToCollection}>
             <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
+              {/* <div className="flex flex-col space-y-1.5">
                 <Label>Your privy account</Label>
                 <pre style={{ fontSize: '14px' }}>{walletAddress}</pre>
-              </div>
+              </div> */}
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="collection-mint-to">Mint NFT to wallet address</Label>
                 <Input
