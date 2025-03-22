@@ -776,12 +776,15 @@ export default function DiscordApp() {
                 nfts.map((nft, idx) => (
                   <div key={idx} className="mt-2 border p-2 rounded overflow-x-auto">
                     <div className="min-w-max space-y-1">
+                      <Label>Name: {nft.name}</Label>
                       <div className="flex items-center space-x-2">
                         <Label>Mint:</Label>
                         <pre style={{ fontSize: '14px' }}>{nft.publicKey}</pre>
                       </div>
-                      <Label>Name: {nft.name}</Label>
-                      <Label>URI: {nft.uri}</Label>
+                      <div className="flex items-center space-x-2">
+                        <Label>URI:</Label>
+                        <pre style={{ fontSize: '14px' }}>{nft.uri}</pre>
+                      </div>
                     </div>
                   </div>
                 ))
