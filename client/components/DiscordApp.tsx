@@ -366,7 +366,7 @@ export default function DiscordApp() {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label>Your privy account</Label>
-                <pre style={{ fontSize: '13px' }}>{walletAddress}</pre>
+                <pre className="text-sm font-ny">{walletAddress}</pre>
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label>Balance: {balance} lamports</Label>
@@ -430,7 +430,7 @@ export default function DiscordApp() {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label>Your privy account</Label>
-                <pre style={{ fontSize: '13px' }}>{walletAddress}</pre>
+                <pre className="text-sm font-ny">{walletAddress}</pre>
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="token-to">To wallet address</Label>
@@ -539,7 +539,7 @@ export default function DiscordApp() {
                       <Label>Symbol: {token.symbol}</Label>
                       <div className="flex items-center space-x-2">
                         <Label>Mint:</Label>
-                        <pre style={{ fontSize: '13px' }}>{token.mint}</pre>
+                        <pre className="text-sm font-ny">{token.mint}</pre>
                       </div>
                       <Label>Balance (smallest unit): {token.balance}</Label>
                       <Label>Decimals: {token.decimals}</Label>
@@ -558,7 +558,7 @@ export default function DiscordApp() {
                       <Label>Symbol: {token.symbol}</Label>
                       <div className="flex items-center space-x-2">
                         <Label>Mint:</Label>
-                        <pre style={{ fontSize: '13px' }}>{token.mint}</pre>
+                        <pre className="text-sm font-ny">{token.mint}</pre>
                       </div>                      
                       <Label>Balance (smallest unit): {token.balance}</Label>
                       <Label>Decimals: {token.decimals}</Label>
@@ -612,7 +612,7 @@ export default function DiscordApp() {
               </Label>
               {mintedAsset && (
                 <div className="mt-2 border p-2 rounded overflow-auto" style={{ maxWidth: '100%', whiteSpace: 'pre-wrap' }}>
-                  <pre style={{ fontSize: '12px', overflowX: 'auto' }}>{JSON.stringify(mintedAsset, null, 2)}</pre>
+                  <pre className="text-sm font-ny overflow-x-auto">{JSON.stringify(mintedAsset, null, 2)}</pre>
                 </div>
               )}
             </div>
@@ -654,7 +654,7 @@ export default function DiscordApp() {
               </Label>
               {deployedCollection && (
                 <div className="mt-2 border p-2 rounded overflow-auto" style={{ maxWidth: '100%', whiteSpace: 'pre-wrap' }}>
-                  <pre style={{ fontSize: '12px', overflowX: 'auto' }}>{JSON.stringify(deployedCollection, null, 2)}</pre>
+                  <pre className="text-sm font-ny overflow-x-auto">{JSON.stringify(deployedCollection, null, 2)}</pre>
                 </div>
               )}
             </div>
@@ -716,7 +716,7 @@ export default function DiscordApp() {
               </Label>
               {mintedCollectionAsset && (
                 <div className="mt-2 border p-2 rounded overflow-auto" style={{ maxWidth: '100%', whiteSpace: 'pre-wrap' }}>
-                  <pre style={{ fontSize: '12px', overflowX: 'auto' }}>{JSON.stringify(mintedCollectionAsset, null, 2)}</pre>
+                  <pre className="text-sm font-ny overflow-x-auto">{JSON.stringify(mintedCollectionAsset, null, 2)}</pre>
                 </div>
               )}
             </div>
@@ -779,7 +779,7 @@ export default function DiscordApp() {
                       <Label>Name: {nft.name}</Label>
                       <div className="flex items-center space-x-2">
                         <Label>Mint:</Label>
-                        <pre style={{ fontSize: '13px' }}>{nft.publicKey}</pre>
+                        <pre className="text-sm font-ny">{nft.publicKey}</pre>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Label>URI:</Label>
