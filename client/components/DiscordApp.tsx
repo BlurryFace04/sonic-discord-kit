@@ -497,6 +497,33 @@ export default function DiscordApp() {
           <CardTitle>Token Balances</CardTitle>
         </CardHeader>
         <CardContent>
+          <Button
+            onClick={async () => {
+              if (walletAddress) {
+                setTokenBalancesLoading(true)
+                try {
+                  const response = await fetch("/.proxy/api/token-balance", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ address: walletAddress }),
+                  })
+                  const data = await response.json()
+                  if (data.splTokens !== undefined && data.token2022Tokens !== undefined) {
+                    setTokenBalances({ splTokens: data.splTokens, token2022Tokens: data.token2022Tokens })
+                  }
+                } catch (err: any) {
+                  console.error("Error fetching token balances:", err)
+                  setTokenBalancesError(err.message)
+                } finally {
+                  setTokenBalancesLoading(false)
+                }
+              }
+            }}
+            disabled={tokenBalancesLoading}
+            className="w-full"
+          >
+            {tokenBalancesLoading ? "Fetching..." : "Fetch Token Balances"}
+          </Button>
           {tokenBalancesLoading ? (
             <Label>Loading token balances...</Label>
           ) : tokenBalancesError ? (
@@ -544,35 +571,7 @@ export default function DiscordApp() {
             </>
           ) : null}
         </CardContent>
-        <CardFooter>
-          <Button
-            onClick={async () => {
-              if (walletAddress) {
-                setTokenBalancesLoading(true)
-                try {
-                  const response = await fetch("/.proxy/api/token-balance", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ address: walletAddress }),
-                  })
-                  const data = await response.json()
-                  if (data.splTokens !== undefined && data.token2022Tokens !== undefined) {
-                    setTokenBalances({ splTokens: data.splTokens, token2022Tokens: data.token2022Tokens })
-                  }
-                } catch (err: any) {
-                  console.error("Error fetching token balances:", err)
-                  setTokenBalancesError(err.message)
-                } finally {
-                  setTokenBalancesLoading(false)
-                }
-              }
-            }}
-            disabled={tokenBalancesLoading}
-            className="w-full"
-          >
-            {tokenBalancesLoading ? "Fetching..." : "Fetch Token Balances"}
-          </Button>
-        </CardFooter>
+        <CardFooter />
       </Card>
 
       {/* NFT Mint Card */}
@@ -775,10 +774,12 @@ export default function DiscordApp() {
             <div className="mt-4">
               {nfts.length > 0 ? (
                 nfts.map((nft, idx) => (
-                  <div key={idx} className="mt-2 border p-2 rounded space-y-1">
-                    <Label>Mint: {nft.publicKey}</Label>
-                    <Label>Name: {nft.name}</Label>
-                    <Label>URI: {nft.uri}</Label>
+                  <div key={idx} className="mt-2 border p-2 rounded space-y-1 overflow-x-auto">
+                    <div className="min-w-max">
+                      <Label>Mint: {nft.publicKey}</Label>
+                      <Label>Name: {nft.name}</Label>
+                      <Label>URI: {nft.uri}</Label>
+                    </div>
                   </div>
                 ))
               ) : (
