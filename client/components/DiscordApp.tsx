@@ -783,7 +783,7 @@ export default function DiscordApp() {
                       </div>
                       <div className="flex items-center space-x-2">
                         <Label>URI:</Label>
-                        <pre style={{ fontSize: '13px' }}>{nft.uri}</pre>
+                        <pre className="text-sm font-ny">{nft.uri}</pre>
                       </div>
                     </div>
                   </div>
